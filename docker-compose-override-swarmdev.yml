@@ -1,0 +1,110 @@
+version: '3.4'
+
+networks:
+  netbox:
+    attachable: true
+  traefik-public:
+    external: true
+
+services:
+  netbox:
+    image: ullafayetteoit/netbox:latest-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+    environment:
+      TIME_ZONE: "US/Central"
+    networks:
+      # internal network for netbox stack
+      - netbox
+      # network for traefik traffic :-)
+      - traefik-public
+    deploy:
+      # labels for traefik integration
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.netbox-http.rule=Host(`netbox.swarmdev.ucs.louisiana.edu`)
+        - traefik.http.routers.netbox-http.entrypoints=http
+        - traefik.http.routers.netbox-http.middlewares=https-redirect
+        - traefik.http.routers.netbox-https.rule=Host(`netbox.swarmdev.ucs.louisiana.edu`)
+        - traefik.http.routers.netbox-https.entrypoints=https
+        - traefik.http.routers.netbox-https.tls=true
+        # this service is not reachable from the Internet so automatic cert generation will not work
+        # - traefik.http.routers.netbox-https.tls.certresolver=le
+        - traefik.http.services.netbox.loadbalancer.server.port=8080
+  netbox-worker:
+    image: ullafayetteoit/netbox:latest-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+    environment:
+      TIME_ZONE: "US/Central"
+    networks:
+      - netbox
+  netbox-housekeeping:
+    image: ullafayetteoit/netbox:latest-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+    environment:
+      TIME_ZONE: "US/Central"
+    # network for internal stack communication
+    networks:
+      - netbox
+  postgres:
+    environment:
+      TIME_ZONE: "US/Central"
+    # network for internal stack communication
+    networks:
+      - netbox
+  redis:
+    environment:
+      TIME_ZONE: "US/Central"
+    # network for internal stack communication
+    networks:
+      - netbox
+  redis-cache:
+    environment:
+      TIME_ZONE: "US/Central"
+    # network for internal stack communication
+    networks:
+      - netbox
+
+volumes:
+  netbox-configuration-files:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/configuration"
+  netbox-reports-files:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/reports"
+  netbox-scripts-files:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/scripts"
+  netbox-media-files:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/media-files"
+  netbox-postgres-data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/postgres-data"
+  netbox-redis-data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/redis-data"
+  netbox-redis-cache-data:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.35.32.135,nolock,soft,rw"
+      device: ":/volume4/swarmdev/netbox/redis-cache-data"
