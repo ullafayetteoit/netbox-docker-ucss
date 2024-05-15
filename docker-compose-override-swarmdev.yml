@@ -77,34 +77,34 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/configuration"
+      device: ":/volume4/swarmdev/netbox4/configuration"
   netbox-reports-files:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/reports"
+      device: ":/volume4/swarmdev/netbox4/reports"
   netbox-scripts-files:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/scripts"
+      device: ":/volume4/swarmdev/netbox4/scripts"
   netbox-media-files:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/media-files"
+      device: ":/volume4/swarmdev/netbox4/media-files"
   netbox-postgres-data:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/postgres-data"
+      device: ":/volume4/swarmdev/netbox4/postgres-data"
   netbox-redis-data:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/redis-data"
+      device: ":/volume4/swarmdev/netbox4/redis-data"
   netbox-redis-cache-data:
     driver_opts:
       type: "nfs"
       o: "addr=10.35.32.135,nolock,soft,rw"
-      device: ":/volume4/swarmdev/netbox/redis-cache-data"
+      device: ":/volume4/swarmdev/netbox4/redis-cache-data"
