@@ -8,7 +8,7 @@ networks:
 
 services:
   netbox:
-    image: ullafayetteoit/netbox:latest-plugins
+    image: ullafayetteoit/netbox:20240516
     build:
       context: .
       dockerfile: Dockerfile-Plugins
@@ -35,7 +35,7 @@ services:
         # - traefik.http.routers.netbox-https.tls.certresolver=le
         - traefik.http.services.netbox.loadbalancer.server.port=8080
   netbox-worker:
-    image: ullafayetteoit/netbox:latest-plugins
+    image: ullafayetteoit/netbox:20240516
     build:
       context: .
       dockerfile: Dockerfile-Plugins
@@ -44,7 +44,7 @@ services:
     networks:
       - netbox
   netbox-housekeeping:
-    image: ullafayetteoit/netbox:latest-plugins
+    image: ullafayetteoit/netbox:20240516
     build:
       context: .
       dockerfile: Dockerfile-Plugins
